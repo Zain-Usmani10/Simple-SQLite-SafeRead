@@ -1,0 +1,27 @@
+Here are the compile instructions:
+1. Compile the SQLite library. This should create a file called sqlite3.o which is what C++ will use:
+    gcc -c sqlite3.c -o sqlite3.o
+
+2. Compile the writer. You should see writer.exe:
+    g++ writer.cpp sqlite3.o -o writer.exe
+
+3. Compile the reader. You should see reader.exe:
+    g++ reader.cpp sqlite3.o -o reader.exe
+
+4.  Now we create the data.db by running writer.exe:
+    ./writer.exe
+
+NOTE: At this point you will also see data.db-wal -> WAL is short for (Write Ahead Logging), which
+is used to write into the data.db. First the data enters the WAL file and then gets safely added to 
+data.db through the middle file, data.db-shm, which is also called the "Shared Memory File"
+
+5.  Once writer.exe has been running for a bit and data has accumulated, we can create snapshot.db by running reader.exe:
+    ./reader.exe
+
+NOTE: To run reader.exe, you have to split terminal and use a new terminal for the ./reader.exe command.
+This is because the previous terminal is busy constantly writing to data.db in an finite loop.
+
+You should now see copy.db which can now be exported via USB stick. Make sure to enter Ctrl+C to the writer terminal
+to make it stop logging data infinetly.
+
+EDIT: WAL mode has been removed to minimize number of files
